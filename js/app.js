@@ -1,9 +1,11 @@
 // Keep settings and future bucket-list items together under the app's one storage key.
 const STORAGE_KEY = "before-i-walk";
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+// NEW: Use the first day of school as the fixed start of the graduation pace timeline.
+const SCHOOL_START_DATE = "2026-08-24";
 const emptyData = {
     graduationDate: "",
-    listStartedDate: "",
+    listStartedDate: SCHOOL_START_DATE,
     items: [],
     assignments: []
 };
@@ -74,7 +76,11 @@ function loadData() {
             throw new TypeError("Saved data has an unexpected shape.");
         }
 
-        return { ...savedData, assignments: savedAssignments };
+        return {
+            ...savedData,
+            listStartedDate: SCHOOL_START_DATE,
+            assignments: savedAssignments
+        };
     } catch {
         formMessage.textContent = "Saved data could not be read. Add a date or list item to start a fresh record.";
         return { ...emptyData };
@@ -136,11 +142,16 @@ function renderCountdown() {
 
 // NEW: Compare completed items with the share of the graduation timeline that has passed.
 function renderPace() {
-    const totalItems = appData.items.length;
-    const completedItems = appData.items.filter((item) => item.done).length;
-    const progressPercent = totalItems === 0 ? 0 : Math.round((completedItems / totalItems) * 100);
-    const hasTimeline = isValidDateString(appData.graduationDate) &&
-        isValidDateString(appData.listStartedDate);
+    const totalBucketItems = appData.items.length;
+    const completedBucketItems = appData.items.filter((item) => item.done).length;
+    const progressPercent = totalBucketItems === 0
+        ? 0
+        : Math.round((completedBucketItems / totalBucketItems) * 100);
+    // NEW: Count unfinished assignments with unfinished bucket-list items for the schedule estimate.
+    const totalTasks = totalBucketItems + appData.assignments.length;
+    const completedTasks = completedBucketItems +
+        appData.assignments.filter((assignment) => assignment.done).length;
+    const hasTimeline = isValidDateString(appData.graduationDate);
 
     let timelineDays = 0;
     let today = 0;
@@ -149,7 +160,7 @@ function renderPace() {
 
     if (hasTimeline) {
         today = getDayNumber(getLocalDateString(new Date()));
-        startDay = getDayNumber(appData.listStartedDate);
+        startDay = getDayNumber(SCHOOL_START_DATE);
         graduationDay = getDayNumber(appData.graduationDate);
         timelineDays = graduationDay - startDay;
     }
@@ -159,12 +170,12 @@ function renderPace() {
     paceProgress.value = progressPercent;
     itemsCompletePercent.textContent = `${progressPercent}%`;
 
-    if (totalItems === 0) {
-        paceMessage.textContent = "0 of 0 done. Add your first bucket list item to see your pace.";
+    if (totalTasks === 0) {
+        paceMessage.textContent = "0 tasks done. Add bucket-list items or school assignments to see your pace.";
         return;
     }
 
-    const itemCount = `${completedItems} of ${totalItems} done.`;
+    const taskCount = `${completedTasks} of ${totalTasks} tasks done.`;
 
     if (!hasTimeline) {
         paceMessage.textContent = `${progressPercent}% of your list is complete. Set your graduation date to compare it with time remaining.`;
@@ -175,28 +186,26 @@ function renderPace() {
     const timelineProgress = timelineDays <= 0
         ? (today >= graduationDay ? 1 : 0)
         : Math.min(1, Math.max(0, elapsedDays / timelineDays));
-    const expectedItems = totalItems * timelineProgress;
-    const progressDifference = completedItems - expectedItems;
+    const expectedTasks = totalTasks * timelineProgress;
+    const progressDifference = completedTasks - expectedTasks;
     if (progressDifference >= 1) {
-        paceMessage.textContent = `${itemCount} Ahead by ${Math.floor(progressDifference)}.`;
+        paceMessage.textContent = `${taskCount} Ahead by ${Math.floor(progressDifference)}.`;
         return;
     }
 
     if (progressDifference >= 0) {
-        paceMessage.textContent = `${itemCount} You're on track!`;
+        paceMessage.textContent = `${taskCount} You're on track!`;
         return;
     }
 
     const itemsBehind = Math.ceil(Math.abs(progressDifference));
-    const remainingItems = totalItems - completedItems;
 
     if (daysLeft === 0) {
-        paceMessage.textContent = `${itemCount} Behind by ${itemsBehind}. Graduation day is here; finish your remaining items today.`;
+        paceMessage.textContent = `${taskCount} Behind by ${itemsBehind}. Graduation day is here; finish your remaining tasks today.`;
         return;
     }
 
-    const itemsPerWeek = Math.ceil(remainingItems / (daysLeft / 7));
-    paceMessage.textContent = `${itemCount} Behind by ${itemsBehind}. Do about ${itemsPerWeek} ${itemsPerWeek === 1 ? "item" : "items"} a week to finish.`;
+    paceMessage.textContent = `${taskCount} Behind by ${itemsBehind}.`;
 }
 
 function saveData(nextData) {
@@ -308,7 +317,7 @@ graduationForm.addEventListener("submit", (event) => {
     const nextData = {
         ...appData,
         graduationDate: chosenDate,
-        listStartedDate: appData.listStartedDate || today
+        listStartedDate: SCHOOL_START_DATE
     };
 
     if (saveData(nextData)) {
@@ -333,7 +342,7 @@ bucketListForm.addEventListener("submit", (event) => {
     const newItem = { text, tag, done: false };
     const nextData = {
         ...appData,
-        listStartedDate: appData.listStartedDate || getLocalDateString(new Date()),
+        listStartedDate: SCHOOL_START_DATE,
         items: [...appData.items, newItem]
     };
 
@@ -406,6 +415,7 @@ assignmentForm.addEventListener("submit", (event) => {
         assignmentDueDateInput.value = "";
         assignmentStatus.textContent = `Added assignment: ${name}.`;
         renderAssignments();
+        renderPace();
         assignmentNameInput.focus();
     }
 });
@@ -439,6 +449,7 @@ assignmentList.addEventListener("change", (event) => {
             ? `Completed assignment: ${appData.assignments[assignmentIndex].name}.`
             : `Marked assignment not done: ${appData.assignments[assignmentIndex].name}.`;
         renderAssignments();
+        renderPace();
     } else {
         event.target.checked = appData.assignments[assignmentIndex].done;
     }
