@@ -1,0 +1,315 @@
+:root {
+    --color-page: #ceb9e4;
+    --color-surface: #ffffff;
+    --color-text: #05000a;
+    --color-muted: #40536b;
+    --color-primary: #3f177e;
+    --color-primary-hover: #220441;
+    --color-error: #8b1e1e;
+    --color-focus: #a33b00;
+    --space-small: 0.5rem;
+    --space-medium: 1rem;
+    --space-large: 1.5rem;
+    --space-card: 2rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-page);
+    color: var(--color-text);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+.site-header,
+.site-footer {
+    padding: var(--space-large) var(--space-medium);
+    text-align: center;
+}
+
+.site-header {
+    padding: var(--space-large) var(--space-medium);
+}
+
+/* NEW: Give Super Frog a large, centered place above the title. */
+.super-frog {
+    position: relative;
+    width: 180px;
+    margin: 0 auto var(--space-medium);
+}
+
+.super-frog img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* NEW: Place the cap over Super Frog's head so he appears to be wearing it. */
+.graduation-cap {
+    position: absolute;
+    top: 0.25rem;
+    left: calc(28% - 3rem);
+    z-index: 1;
+    font-size: 4.5rem;
+    line-height: 1;
+    transform: rotate(-18deg);
+}
+
+.site-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.site-header p,
+.site-footer p {
+    margin: var(--space-small) 0 0;
+    color: var(--color-muted);
+}
+
+.page-content {
+    width: min(100% - 2rem, 38rem);
+    margin: auto;
+    padding: var(--space-medium) 0;
+}
+
+.countdown-card {
+    padding: var(--space-card);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    box-shadow: 0 0.25rem 1rem rgb(23 43 67 / 12%);
+}
+
+.bucket-list-card {
+    margin-top: var(--space-large);
+    padding: var(--space-card);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    box-shadow: 0 0.25rem 1rem rgb(23 43 67 / 12%);
+}
+
+/* NEW: Make the pace summary a separate card above the bucket list. */
+.pace-card {
+    margin-top: var(--space-large);
+    padding: var(--space-card);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    box-shadow: 0 0.25rem 1rem rgb(23 43 67 / 12%);
+}
+
+/* NEW: Give the school assignment tracker the same card layout as the other sections. */
+.assignment-card {
+    margin-top: var(--space-large);
+    padding: var(--space-card);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    box-shadow: 0 0.25rem 1rem rgb(23 43 67 / 12%);
+}
+
+.countdown-card h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.bucket-list-card h2 {
+    margin: 0 0 var(--space-large);
+    font-size: 1.5rem;
+}
+
+.pace-card h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.assignment-card h2 {
+    margin: 0 0 var(--space-large);
+    font-size: 1.5rem;
+}
+
+.countdown-message {
+    margin: var(--space-medium) 0 var(--space-large);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.pace-message {
+    margin: var(--space-medium) 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+#pace-progress {
+    display: block;
+    width: 100%;
+    height: 1rem;
+    accent-color: var(--color-primary);
+}
+
+form {
+    display: grid;
+    gap: var(--space-small);
+}
+
+label {
+    font-weight: 700;
+}
+
+input,
+select,
+button {
+    min-height: 2.75rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-muted);
+    border-radius: 0.375rem;
+    font: inherit;
+}
+
+input {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+select {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+button {
+    margin-top: var(--space-small);
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-surface);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: var(--color-primary-hover);
+    background: var(--color-primary-hover);
+}
+
+/* Keep the keyboard focus easy to spot on every interactive control. */
+:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+}
+
+.form-message {
+    min-height: 1.5em;
+    margin: var(--space-medium) 0 0;
+    color: var(--color-error);
+}
+
+.list-status {
+    min-height: 1.5em;
+    margin: var(--space-medium) 0 0;
+    color: var(--color-muted);
+}
+
+.bucket-list {
+    display: grid;
+    gap: var(--space-small);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bucket-list-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-medium);
+    padding: var(--space-medium);
+    border: 1px solid var(--color-muted);
+    border-radius: 0.375rem;
+}
+
+/* NEW: Keep each bucket-list completion checkbox easy to see and use. */
+.bucket-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--color-primary);
+}
+
+.bucket-item-name {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.bucket-item-name.is-done {
+    text-decoration: line-through;
+}
+
+/* NEW: Keep each assignment's checkbox, name, and due date grouped together. */
+.assignment-list {
+    display: grid;
+    gap: var(--space-small);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.assignment-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-medium);
+    padding: var(--space-medium);
+    border: 1px solid var(--color-muted);
+    border-radius: 0.375rem;
+}
+
+.assignment-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--color-primary);
+}
+
+.assignment-name {
+    overflow-wrap: anywhere;
+}
+
+.assignment-name.is-done {
+    text-decoration: line-through;
+}
+
+.assignment-due-date {
+    grid-column: 2;
+    margin: calc(-1 * var(--space-small)) 0 0;
+    color: var(--color-muted);
+}
+
+.item-tag {
+    flex: 0 0 auto;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-page);
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.site-footer {
+    margin-top: auto;
+}
+
+@media (max-width: 30rem) {
+    .countdown-card,
+    .pace-card,
+    .bucket-list-card,
+    .assignment-card {
+        padding: var(--space-large);
+    }
+}

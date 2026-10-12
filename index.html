@@ -3,9 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="A countdown to graduation day.">
+    <title>Before I Walk | Graduation Countdown</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/app.js" defer></script>
 </head>
 <body>
-    
+    <header class="site-header">
+        <div class="super-frog">
+            <img src="images/super-frog.png" alt="Super Frog wearing a graduation cap">
+            <span class="graduation-cap" aria-hidden="true">🎓</span>
+        </div>
+        <h1>Before I Walk</h1>
+        <p>A little countdown to the day you graduate.</p>
+    </header>
+
+    <main class="page-content">
+        <section class="countdown-card" aria-labelledby="countdown-title">
+            <h2 id="countdown-title">Your graduation countdown</h2>
+            <p id="countdown" class="countdown-message" aria-live="polite" aria-atomic="true">
+                Set your graduation date to start the countdown.
+            </p>
+
+            <form id="graduation-form">
+                <label for="graduation-date">Graduation date</label>
+                <input id="graduation-date" name="graduation-date" type="date" aria-describedby="form-message">
+                <button type="submit">Save date</button>
+            </form>
+
+            <p id="form-message" class="form-message" aria-live="polite" aria-atomic="true"></p>
+        </section>
+
+        <!-- NEW: Compare completed bucket-list items with expected progress before graduation. -->
+        <section class="pace-card" aria-labelledby="pace-title">
+            <h2 id="pace-title">Bucket list progress</h2>
+            <div class="pace-comparison" aria-label="Bucket list completion">
+                <p>
+                    <strong id="items-complete-percent">0%</strong>
+                    <span>of bucket list complete</span>
+                </p>
+            </div>
+            <p id="pace-message" class="pace-message" aria-live="polite" aria-atomic="true"></p>
+            <progress id="pace-progress" max="100" value="0" aria-label="Bucket list completion"></progress>
+        </section>
+
+        <section class="bucket-list-card" aria-labelledby="bucket-list-title">
+            <h2 id="bucket-list-title">My senior bucket list</h2>
+            <form id="bucket-list-form">
+                <label for="item-text">Something you want to do</label>
+                <input id="item-text" name="item-text" type="text" maxlength="120" aria-describedby="form-message">
+
+                <label for="item-tag">Tag</label>
+                <select id="item-tag" name="item-tag" aria-describedby="form-message">
+                    <option value="with-friends">With friends</option>
+                    <option value="free">Free</option>
+                    <option value="off-campus">Off campus</option>
+                </select>
+
+                <button type="submit">Add to my list</button>
+            </form>
+            <p id="list-status" class="list-status" aria-live="polite" aria-atomic="true"></p>
+            <ul id="bucket-list" class="bucket-list" aria-label="Your bucket list"></ul>
+        </section>
+
+        <!-- NEW: Track assignment names, due dates, and completion in the school list. -->
+        <section class="assignment-card" aria-labelledby="assignment-title">
+            <h2 id="assignment-title">School assignments</h2>
+            <form id="assignment-form">
+                <label for="assignment-name">Assignment name</label>
+                <input id="assignment-name" name="assignment-name" type="text" maxlength="120" aria-describedby="form-message">
+
+                <label for="assignment-due-date">Due date</label>
+                <input id="assignment-due-date" name="assignment-due-date" type="date" aria-describedby="form-message">
+
+                <button type="submit">Add assignment</button>
+            </form>
+            <p id="assignment-status" class="list-status" aria-live="polite" aria-atomic="true"></p>
+            <ul id="assignment-list" class="assignment-list" aria-label="Your school assignments"></ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Your date is saved only in this browser.</p>
+    </footer>
 </body>
 </html>
