@@ -230,7 +230,10 @@ body {
 
 .bucket-list-card h2 {
     margin: 0 0 var(--space-large);
-    font-size: 1.5rem;
+    color: var(--color-primary);
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
 }
 
 .pace-card h2 {
@@ -479,6 +482,13 @@ button:hover {
 .application-list-card h2 {
     margin: 0 0 var(--space-small);
     font-size: 1.5rem;
+}
+
+.applications-intro h2 {
+    color: var(--color-primary);
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
 }
 
 .applications-intro p {
