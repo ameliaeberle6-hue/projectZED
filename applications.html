@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Keep your job applications, interview progress, and follow-ups in one place.">
+    <title>The Next Chapter | Job Application Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/applications.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="super-frog">
+            <img src="images/super-frog.png" alt="Super Frog wearing a graduation cap">
+            <span class="graduation-cap" aria-hidden="true">🎓</span>
+        </div>
+        <h1>The Next Chapter</h1>
+        <p>One application at a time. Your next adventure is out there.</p>
+    </header>
+
+    <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html">Senior year fun</a>
+        <a class="is-current" href="applications.html" aria-current="page">Job hunt</a>
+    </nav>
+
+    <main class="page-content">
+        <section class="applications-intro" aria-labelledby="applications-intro-title">
+            <h2 id="applications-intro-title">Your job hunt, in one place</h2>
+            <p>Keep tabs on where you applied, what you heard back, and who you need to follow up with. Every application is progress!</p>
+        </section>
+
+        <section class="application-form-card" aria-labelledby="application-form-title">
+            <h2 id="application-form-title">Add an application</h2>
+            <form id="application-form" class="application-form">
+                <div class="form-field">
+                    <label for="company-name">Company</label>
+                    <input id="company-name" name="company" type="text" maxlength="100" required>
+                </div>
+                <div class="form-field">
+                    <label for="job-title">Job title</label>
+                    <input id="job-title" name="role" type="text" maxlength="100" required>
+                </div>
+                <div class="form-field">
+                    <label for="application-date">Date applied</label>
+                    <input id="application-date" name="appliedDate" type="date" required>
+                </div>
+                <div class="form-field">
+                    <label for="application-status">Current status</label>
+                    <select id="application-status" name="status">
+                        <option value="waiting">Waiting to hear</option>
+                        <option value="interviewing">Interviewing</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="denied">Denied</option>
+                    </select>
+                </div>
+                <div class="form-field form-field-wide">
+                    <label for="follow-up-date">Follow-up reminder (optional)</label>
+                    <input id="follow-up-date" name="followUpDate" type="date">
+                </div>
+                <div class="form-field form-field-wide">
+                    <label for="application-notes">Notes (optional)</label>
+                    <textarea id="application-notes" name="notes" rows="3" maxlength="500" placeholder="Recruiter contact, interview prep, or anything to remember"></textarea>
+                </div>
+                <button type="submit">Add to my job hunt</button>
+            </form>
+            <p id="application-form-message" class="form-message" aria-live="polite" aria-atomic="true"></p>
+        </section>
+
+        <section class="application-dashboard" aria-label="Application summary">
+            <div class="application-stats" aria-label="Application summary">
+                <div class="application-stat"><strong id="total-count">0</strong><span>Applications</span></div>
+                <div class="application-stat"><strong id="waiting-count">0</strong><span>Waiting</span></div>
+                <div class="application-stat"><strong id="interview-count">0</strong><span>Interviews</span></div>
+                <div class="application-stat"><strong id="accepted-count">0</strong><span>Accepted</span></div>
+                <div class="application-stat"><strong id="denied-count">0</strong><span>Denied</span></div>
+            </div>
+        </section>
+
+        <section class="application-list-card" aria-labelledby="application-list-title">
+            <h2 id="application-list-title">Your applications</h2>
+            <div class="application-controls">
+                <label for="application-search">Search company or role
+                    <input id="application-search" type="search" placeholder="Try “designer”">
+                </label>
+                <label for="application-filter">Show
+                    <select id="application-filter">
+                        <option value="all">All statuses</option>
+                        <option value="waiting">Waiting to hear</option>
+                        <option value="interviewing">Interviewing</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="denied">Denied</option>
+                    </select>
+                </label>
+            </div>
+            <p id="application-list-message" class="list-status" aria-live="polite" aria-atomic="true"></p>
+            <ul id="application-list" class="application-list" aria-label="Your job applications"></ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Your applications are saved only in this browser.</p>
+    </footer>
+</body>
+</html>

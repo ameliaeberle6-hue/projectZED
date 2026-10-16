@@ -73,6 +73,28 @@ body {
     color: var(--color-muted);
 }
 
+.site-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-small);
+    padding: 0 var(--space-medium);
+}
+
+.site-nav a {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-primary);
+    border-radius: 999px;
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a.is-current {
+    background: var(--color-primary);
+    color: var(--color-surface);
+}
+
 .page-content {
     width: min(100% - 2rem, 38rem);
     margin: auto;
@@ -162,6 +184,7 @@ label {
 
 input,
 select,
+textarea,
 button {
     min-height: 2.75rem;
     padding: 0.625rem 0.75rem;
@@ -305,11 +328,209 @@ button:hover {
     margin-top: auto;
 }
 
+.applications-intro,
+.application-form-card,
+.application-list-card {
+    padding: var(--space-card);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    box-shadow: 0 0.25rem 1rem rgb(23 43 67 / 12%);
+}
+
+.application-form-card,
+.application-list-card {
+    margin-top: var(--space-large);
+}
+
+.applications-intro h2,
+.application-form-card h2,
+.application-list-card h2 {
+    margin: 0 0 var(--space-small);
+    font-size: 1.5rem;
+}
+
+.applications-intro p {
+    margin: 0;
+    color: var(--color-muted);
+}
+
+.application-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-small);
+    margin-top: var(--space-medium);
+}
+
+.application-stat {
+    padding: var(--space-medium);
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.application-stat strong {
+    display: block;
+    color: var(--color-primary);
+    font-size: 1.75rem;
+}
+
+.application-stat span {
+    display: block;
+    font-size: 0.875rem;
+}
+
+.application-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 0.55fr);
+    gap: var(--space-medium);
+    margin: var(--space-medium) 0;
+}
+
+.application-controls label {
+    display: grid;
+    gap: var(--space-small);
+}
+
+.application-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.application-form .form-field {
+    display: grid;
+    gap: var(--space-small);
+}
+
+.application-form .form-field-wide,
+.application-form button {
+    grid-column: 1 / -1;
+}
+
+.application-list {
+    display: grid;
+    gap: var(--space-medium);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.application-item {
+    padding: var(--space-medium);
+    border: 1px solid #b8a5cf;
+    border-radius: 0.5rem;
+}
+
+.application-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-medium);
+}
+
+.application-item h3 {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.application-company {
+    margin: 0.125rem 0 var(--space-small);
+    color: var(--color-muted);
+}
+
+.application-status {
+    flex: 0 0 auto;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: #eee7f6;
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.application-status.status-interviewing {
+    background: #fff1cc;
+    color: #654500;
+}
+
+.application-status.status-accepted {
+    background: #e2f5e8;
+    color: #14552b;
+}
+
+.application-status.status-denied {
+    background: #fbe6e6;
+    color: #7a2020;
+}
+
+.application-meta,
+.application-notes {
+    margin: var(--space-small) 0 0;
+    overflow-wrap: anywhere;
+}
+
+.application-reminder {
+    color: var(--color-error);
+    font-weight: 700;
+}
+
+.application-item-actions {
+    display: flex;
+    align-items: end;
+    gap: var(--space-small);
+    margin-top: var(--space-medium);
+}
+
+.application-item-actions label {
+    display: grid;
+    flex: 1;
+    gap: var(--space-small);
+}
+
+.application-item-actions button {
+    margin-top: 0;
+    border-color: var(--color-error);
+    background: var(--color-surface);
+    color: var(--color-error);
+}
+
+.application-item-actions button:hover {
+    background: #fff0f0;
+}
+
+.application-empty {
+    padding: var(--space-medium);
+    border: 1px dashed #b8a5cf;
+    border-radius: 0.5rem;
+    color: var(--color-muted);
+    text-align: center;
+}
+
 @media (max-width: 30rem) {
     .countdown-card,
     .pace-card,
     .bucket-list-card,
-    .assignment-card {
+    .assignment-card,
+    .applications-intro,
+    .application-form-card,
+    .application-list-card {
         padding: var(--space-large);
+    }
+
+    .application-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .application-controls,
+    .application-form {
+        grid-template-columns: 1fr;
+    }
+
+    .application-form .form-field-wide,
+    .application-form button {
+        grid-column: auto;
+    }
+
+    .application-item-header,
+    .application-item-actions {
+        align-items: stretch;
+        flex-direction: column;
     }
 }
