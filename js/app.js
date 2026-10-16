@@ -15,6 +15,10 @@ const graduationDateInput = document.querySelector("#graduation-date");
 const paceMessage = document.querySelector("#pace-message");
 const paceProgress = document.querySelector("#pace-progress");
 const itemsCompletePercent = document.querySelector("#items-complete-percent");
+const paceLabel = document.querySelector("#pace-label");
+const paceTaskCount = document.querySelector("#pace-task-count");
+const paceDaysLeft = document.querySelector("#pace-days-left");
+const paceRemaining = document.querySelector("#pace-remaining");
 const bucketListForm = document.querySelector("#bucket-list-form");
 const itemTextInput = document.querySelector("#item-text");
 const itemTagInput = document.querySelector("#item-tag");
@@ -26,6 +30,10 @@ const assignmentDueDateInput = document.querySelector("#assignment-due-date");
 const assignmentList = document.querySelector("#assignment-list");
 const assignmentStatus = document.querySelector("#assignment-status");
 const countdownMessage = document.querySelector("#countdown");
+const countdownDays = document.querySelector("#countdown-days");
+const countdownHours = document.querySelector("#countdown-hours");
+const countdownMinutes = document.querySelector("#countdown-minutes");
+const countdownSeconds = document.querySelector("#countdown-seconds");
 const formMessage = document.querySelector("#form-message");
 
 // A broken saved value starts a fresh record and gives the user an explicit notice.
@@ -126,17 +134,33 @@ function isValidDateString(dateString) {
 function renderCountdown() {
     if (!appData.graduationDate) {
         countdownMessage.textContent = "Set your graduation date to start the countdown.";
+        countdownDays.textContent = "00";
+        countdownHours.textContent = "00";
+        countdownMinutes.textContent = "00";
+        countdownSeconds.textContent = "00";
         return;
     }
 
-    const daysLeft = getDayNumber(appData.graduationDate) - getDayNumber(getLocalDateString(new Date()));
+    const [year, month, day] = appData.graduationDate.split("-").map(Number);
+    const graduationDayEnd = new Date(year, month - 1, day + 1);
+    const secondsLeft = Math.max(0, Math.floor((graduationDayEnd.getTime() - Date.now()) / 1000));
+    const daysLeft = Math.floor(secondsLeft / (24 * 60 * 60));
+    const hoursLeft = Math.floor((secondsLeft % (24 * 60 * 60)) / (60 * 60));
+    const minutesLeft = Math.floor((secondsLeft % (60 * 60)) / 60);
+    const secondsRemaining = secondsLeft % 60;
+    const today = getLocalDateString(new Date());
 
-    if (daysLeft < 0) {
+    countdownDays.textContent = String(daysLeft).padStart(2, "0");
+    countdownHours.textContent = String(hoursLeft).padStart(2, "0");
+    countdownMinutes.textContent = String(minutesLeft).padStart(2, "0");
+    countdownSeconds.textContent = String(secondsRemaining).padStart(2, "0");
+
+    if (today > appData.graduationDate) {
         countdownMessage.textContent = "Congrats, you graduated!";
-    } else if (daysLeft === 0) {
-        countdownMessage.textContent = "Graduation day is today!";
+    } else if (today === appData.graduationDate) {
+        countdownMessage.textContent = "It's graduation day!";
     } else {
-        countdownMessage.textContent = `${daysLeft} ${daysLeft === 1 ? "day" : "days"} left until graduation.`;
+        countdownMessage.textContent = "Time left until graduation day";
     }
 }
 
@@ -144,13 +168,13 @@ function renderCountdown() {
 function renderPace() {
     const totalBucketItems = appData.items.length;
     const completedBucketItems = appData.items.filter((item) => item.done).length;
-    const progressPercent = totalBucketItems === 0
-        ? 0
-        : Math.round((completedBucketItems / totalBucketItems) * 100);
-    // NEW: Count unfinished assignments with unfinished bucket-list items for the schedule estimate.
     const totalTasks = totalBucketItems + appData.assignments.length;
     const completedTasks = completedBucketItems +
         appData.assignments.filter((assignment) => assignment.done).length;
+    const remainingTasks = totalTasks - completedTasks;
+    const progressPercent = totalTasks === 0
+        ? 0
+        : Math.round((completedTasks / totalTasks) * 100);
     const hasTimeline = isValidDateString(appData.graduationDate);
 
     let timelineDays = 0;
@@ -165,20 +189,27 @@ function renderPace() {
         timelineDays = graduationDay - startDay;
     }
 
-    const daysLeft = hasTimeline ? Math.max(0, graduationDay - today) : 0;
+    const rawDaysLeft = hasTimeline ? graduationDay - today : null;
+    const daysLeft = rawDaysLeft === null ? null : Math.max(0, rawDaysLeft);
 
-    paceProgress.value = progressPercent;
+    paceProgress.setAttribute("aria-valuenow", String(progressPercent));
+    paceProgress.style.setProperty("--pace-progress", `${progressPercent}%`);
     itemsCompletePercent.textContent = `${progressPercent}%`;
+    paceTaskCount.textContent = `${completedTasks}/${totalTasks}`;
+    paceDaysLeft.textContent = daysLeft === null
+        ? "—"
+        : String(daysLeft);
+    paceRemaining.textContent = String(remainingTasks);
 
     if (totalTasks === 0) {
-        paceMessage.textContent = "0 tasks done. Add bucket-list items or school assignments to see your pace.";
+        paceLabel.textContent = hasTimeline ? "Ready when you are" : "Let's get started";
+        paceMessage.textContent = "Add bucket-list items or school assignments to see how your senior year is shaping up.";
         return;
     }
 
-    const taskCount = `${completedTasks} of ${totalTasks} tasks done.`;
-
     if (!hasTimeline) {
-        paceMessage.textContent = `${progressPercent}% of your list is complete. Set your graduation date to compare it with time remaining.`;
+        paceLabel.textContent = "Set your date";
+        paceMessage.textContent = "Your tasks are on the board. Set your graduation date to see how your progress lines up with the time left.";
         return;
     }
 
@@ -188,24 +219,39 @@ function renderPace() {
         : Math.min(1, Math.max(0, elapsedDays / timelineDays));
     const expectedTasks = totalTasks * timelineProgress;
     const progressDifference = completedTasks - expectedTasks;
+
+    if (rawDaysLeft < 0) {
+        paceLabel.textContent = "Graduation passed";
+        paceMessage.textContent = remainingTasks === 0
+            ? "You checked everything off. Congratulations, graduate!"
+            : `Graduation day has passed with ${remainingTasks} ${remainingTasks === 1 ? "task" : "tasks"} left on your list.`;
+        return;
+    }
+
+    if (rawDaysLeft === 0) {
+        paceLabel.textContent = remainingTasks === 0 ? "All done" : "Graduation day";
+        paceMessage.textContent = remainingTasks === 0
+            ? "You checked everything off. Congratulations!"
+            : `Graduation day is here, with ${remainingTasks} ${remainingTasks === 1 ? "task" : "tasks"} left.`;
+        return;
+    }
+
     if (progressDifference >= 1) {
-        paceMessage.textContent = `${taskCount} Ahead by ${Math.floor(progressDifference)}.`;
+        const aheadBy = Math.floor(progressDifference);
+        paceLabel.textContent = "Ahead of pace";
+        paceMessage.textContent = `You're ahead of your steady pace by ${aheadBy} ${aheadBy === 1 ? "task" : "tasks"}. Keep it up!`;
         return;
     }
 
     if (progressDifference >= 0) {
-        paceMessage.textContent = `${taskCount} You're on track!`;
+        paceLabel.textContent = "On track";
+        paceMessage.textContent = "You're right on track with a steady pace toward graduation.";
         return;
     }
 
     const itemsBehind = Math.ceil(Math.abs(progressDifference));
-
-    if (daysLeft === 0) {
-        paceMessage.textContent = `${taskCount} Behind by ${itemsBehind}. Graduation day is here; finish your remaining tasks today.`;
-        return;
-    }
-
-    paceMessage.textContent = `${taskCount} Behind by ${itemsBehind}.`;
+    paceLabel.textContent = "A little behind";
+    paceMessage.textContent = `You're about ${itemsBehind} ${itemsBehind === 1 ? "task" : "tasks"} behind a steady pace. There's still time to catch up.`;
 }
 
 function saveData(nextData) {
@@ -302,6 +348,7 @@ renderCountdown();
 renderList();
 renderPace();
 renderAssignments();
+setInterval(renderCountdown, 1000);
 
 graduationForm.addEventListener("submit", (event) => {
     event.preventDefault();

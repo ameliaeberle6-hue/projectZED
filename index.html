@@ -15,41 +15,87 @@
             <span class="graduation-cap" aria-hidden="true">🎓</span>
         </div>
         <h1>Before I Walk</h1>
-        <p>A little countdown to the day you graduate.</p>
+        <p>Your senior year planner to help you get everything you need done before graduation DONE!</p>
     </header>
 
+    <section class="countdown-card" aria-labelledby="countdown-title">
+        <h2 id="countdown-title">Your graduation countdown</h2>
+        <p id="countdown" class="countdown-message" aria-live="polite" aria-atomic="true">
+            Set your graduation date to start the countdown.
+        </p>
+        <div class="countdown-clock" role="timer" aria-label="Time remaining until graduation" aria-live="off">
+            <div class="countdown-unit">
+                <span id="countdown-days" class="countdown-number">00</span>
+                <span class="countdown-unit-label">days</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="countdown-hours" class="countdown-number">00</span>
+                <span class="countdown-unit-label">hours</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="countdown-minutes" class="countdown-number">00</span>
+                <span class="countdown-unit-label">minutes</span>
+            </div>
+            <div class="countdown-unit">
+                <span id="countdown-seconds" class="countdown-number">00</span>
+                <span class="countdown-unit-label">seconds</span>
+            </div>
+        </div>
+        <form id="graduation-form" class="countdown-date-form">
+            <label for="graduation-date">Graduation date</label>
+            <input id="graduation-date" name="graduation-date" type="date" aria-describedby="form-message">
+            <button type="submit">Save date</button>
+        </form>
+        <p id="form-message" class="form-message" aria-live="polite" aria-atomic="true"></p>
+    </section>
+
     <nav class="site-nav" aria-label="Main navigation">
-        <a class="is-current" href="index.html" aria-current="page">Senior year fun</a>
+        <a class="is-current" href="index.html" aria-current="page">Senior year planner</a>
         <a href="applications.html">Job hunt</a>
     </nav>
 
     <main class="page-content">
-        <section class="countdown-card" aria-labelledby="countdown-title">
-            <h2 id="countdown-title">Your graduation countdown</h2>
-            <p id="countdown" class="countdown-message" aria-live="polite" aria-atomic="true">
-                Set your graduation date to start the countdown.
-            </p>
-
-            <form id="graduation-form">
-                <label for="graduation-date">Graduation date</label>
-                <input id="graduation-date" name="graduation-date" type="date" aria-describedby="form-message">
-                <button type="submit">Save date</button>
-            </form>
-
-            <p id="form-message" class="form-message" aria-live="polite" aria-atomic="true"></p>
-        </section>
-
-        <!-- NEW: Compare completed bucket-list items with expected progress before graduation. -->
         <section class="pace-card" aria-labelledby="pace-title">
-            <h2 id="pace-title">Bucket list progress</h2>
-            <div class="pace-comparison" aria-label="Bucket list completion">
-                <p>
-                    <strong id="items-complete-percent">0%</strong>
-                    <span>of bucket list complete</span>
-                </p>
+            <div class="pace-heading">
+                <div>
+                    <p class="pace-eyebrow">YOUR SENIOR YEAR CHECK-IN</p>
+                    <h2 id="pace-title">Your senior year pace</h2>
+                </div>
+                <span id="pace-label" class="pace-label">Let's get started</span>
             </div>
-            <p id="pace-message" class="pace-message" aria-live="polite" aria-atomic="true"></p>
-            <progress id="pace-progress" max="100" value="0" aria-label="Bucket list completion"></progress>
+            <div class="pace-overview">
+                <div
+                    id="pace-progress"
+                    class="pace-progress"
+                    role="progressbar"
+                    aria-label="All tasks completed"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                >
+                    <div class="pace-progress-center">
+                        <strong id="items-complete-percent">0%</strong>
+                        <span>tasks done</span>
+                    </div>
+                </div>
+                <div class="pace-details">
+                    <p id="pace-message" class="pace-message" aria-live="polite" aria-atomic="true"></p>
+                    <div class="pace-stats">
+                        <div class="pace-stat">
+                            <strong id="pace-task-count">0/0</strong>
+                            <span>tasks completed</span>
+                        </div>
+                        <div class="pace-stat">
+                            <strong id="pace-days-left">—</strong>
+                            <span>days to graduation</span>
+                        </div>
+                        <div class="pace-stat">
+                            <strong id="pace-remaining">0</strong>
+                            <span>tasks left</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="bucket-list-card" aria-labelledby="bucket-list-title">
