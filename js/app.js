@@ -24,11 +24,6 @@ const itemTextInput = document.querySelector("#item-text");
 const itemTagInput = document.querySelector("#item-tag");
 const bucketList = document.querySelector("#bucket-list");
 const listStatus = document.querySelector("#list-status");
-const assignmentForm = document.querySelector("#assignment-form");
-const assignmentNameInput = document.querySelector("#assignment-name");
-const assignmentDueDateInput = document.querySelector("#assignment-due-date");
-const assignmentList = document.querySelector("#assignment-list");
-const assignmentStatus = document.querySelector("#assignment-status");
 const countdownMessage = document.querySelector("#countdown");
 const countdownDays = document.querySelector("#countdown-days");
 const countdownHours = document.querySelector("#countdown-hours");
@@ -160,7 +155,7 @@ function renderCountdown() {
     } else if (today === appData.graduationDate) {
         countdownMessage.textContent = "It's graduation day!";
     } else {
-        countdownMessage.textContent = "Time left until graduation day";
+        countdownMessage.textContent = "Time left until graduation day:";
     }
 }
 
@@ -168,9 +163,8 @@ function renderCountdown() {
 function renderPace() {
     const totalBucketItems = appData.items.length;
     const completedBucketItems = appData.items.filter((item) => item.done).length;
-    const totalTasks = totalBucketItems + appData.assignments.length;
-    const completedTasks = completedBucketItems +
-        appData.assignments.filter((assignment) => assignment.done).length;
+    const totalTasks = totalBucketItems;
+    const completedTasks = completedBucketItems;
     const remainingTasks = totalTasks - completedTasks;
     const progressPercent = totalTasks === 0
         ? 0
@@ -203,7 +197,7 @@ function renderPace() {
 
     if (totalTasks === 0) {
         paceLabel.textContent = hasTimeline ? "Ready when you are" : "Let's get started";
-        paceMessage.textContent = "Add bucket-list items or school assignments to see how your senior year is shaping up.";
+        paceMessage.textContent = "Add bucket-list ideas to see how your senior year is shaping up.";
         return;
     }
 
@@ -305,41 +299,6 @@ function renderList() {
     });
 }
 
-// NEW: Show assignments with labeled checkboxes and their due dates.
-function renderAssignments() {
-    assignmentList.replaceChildren();
-
-    if (appData.assignments.length === 0) {
-        const emptyItem = document.createElement("li");
-        emptyItem.textContent = "No school assignments yet. Add one above.";
-        assignmentList.append(emptyItem);
-        return;
-    }
-
-    appData.assignments.forEach((assignment, index) => {
-        const listItem = document.createElement("li");
-        const checkbox = document.createElement("input");
-        const nameLabel = document.createElement("label");
-        const dueDate = document.createElement("p");
-        const checkboxId = `assignment-done-${index}`;
-
-        listItem.className = "assignment-item";
-        checkbox.id = checkboxId;
-        checkbox.type = "checkbox";
-        checkbox.className = "assignment-checkbox";
-        checkbox.checked = assignment.done;
-        checkbox.dataset.assignmentIndex = String(index);
-        nameLabel.htmlFor = checkboxId;
-        nameLabel.className = `assignment-name${assignment.done ? " is-done" : ""}`;
-        nameLabel.textContent = assignment.name;
-        dueDate.className = "assignment-due-date";
-        dueDate.textContent = `Due ${assignment.dueDate}`;
-
-        listItem.append(checkbox, nameLabel, dueDate);
-        assignmentList.append(listItem);
-    });
-}
-
 // Restore the saved graduation date in the date picker.
 if (isValidDateString(appData.graduationDate)) {
     graduationDateInput.value = appData.graduationDate;
@@ -347,7 +306,6 @@ if (isValidDateString(appData.graduationDate)) {
 renderCountdown();
 renderList();
 renderPace();
-renderAssignments();
 setInterval(renderCountdown, 1000);
 
 graduationForm.addEventListener("submit", (event) => {
@@ -430,74 +388,5 @@ bucketList.addEventListener("change", (event) => {
         renderPace();
     } else {
         event.target.checked = appData.items[itemIndex].done;
-    }
-});
-
-// NEW: Save a school assignment with its due date and unfinished state.
-assignmentForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = assignmentNameInput.value.trim();
-    const dueDate = assignmentDueDateInput.value;
-
-    if (name === "") {
-        formMessage.textContent = "Enter an assignment name before adding it.";
-        assignmentNameInput.focus();
-        return;
-    }
-
-    if (!isValidDateString(dueDate)) {
-        formMessage.textContent = "Choose a valid due date for the assignment.";
-        assignmentDueDateInput.focus();
-        return;
-    }
-
-    const nextData = {
-        ...appData,
-        assignments: [...appData.assignments, { name, dueDate, done: false }]
-    };
-
-    if (saveData(nextData)) {
-        formMessage.textContent = "";
-        assignmentNameInput.value = "";
-        assignmentDueDateInput.value = "";
-        assignmentStatus.textContent = `Added assignment: ${name}.`;
-        renderAssignments();
-        renderPace();
-        assignmentNameInput.focus();
-    }
-});
-
-// NEW: Handle all assignment checkboxes from the list in one event listener.
-assignmentList.addEventListener("change", (event) => {
-    if (!(event.target instanceof HTMLInputElement) || event.target.type !== "checkbox") {
-        return;
-    }
-
-    const assignmentIndex = Number(event.target.dataset.assignmentIndex);
-
-    if (
-        !Number.isInteger(assignmentIndex) ||
-        assignmentIndex < 0 ||
-        assignmentIndex >= appData.assignments.length
-    ) {
-        return;
-    }
-
-    // NEW: Make a changed copy so a save failure leaves the current data untouched.
-    const updatedAssignments = appData.assignments.map((assignment, index) =>
-        index === assignmentIndex
-            ? { ...assignment, done: event.target.checked }
-            : assignment
-    );
-    const nextData = { ...appData, assignments: updatedAssignments };
-
-    if (saveData(nextData)) {
-        assignmentStatus.textContent = event.target.checked
-            ? `Completed assignment: ${appData.assignments[assignmentIndex].name}.`
-            : `Marked assignment not done: ${appData.assignments[assignmentIndex].name}.`;
-        renderAssignments();
-        renderPace();
-    } else {
-        event.target.checked = appData.assignments[assignmentIndex].done;
     }
 });

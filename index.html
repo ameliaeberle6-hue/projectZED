@@ -68,7 +68,7 @@
                     id="pace-progress"
                     class="pace-progress"
                     role="progressbar"
-                    aria-label="All tasks completed"
+                    aria-label="Bucket-list tasks completed"
                     aria-valuemin="0"
                     aria-valuemax="100"
                     aria-valuenow="0"
@@ -83,7 +83,7 @@
                     <div class="pace-stats">
                         <div class="pace-stat">
                             <strong id="pace-task-count">0/0</strong>
-                            <span>tasks completed</span>
+                            <span>bucket-list tasks completed</span>
                         </div>
                         <div class="pace-stat">
                             <strong id="pace-days-left">—</strong>
@@ -116,26 +116,10 @@
             <p id="list-status" class="list-status" aria-live="polite" aria-atomic="true"></p>
             <ul id="bucket-list" class="bucket-list" aria-label="Your bucket list"></ul>
         </section>
-
-        <!-- NEW: Track assignment names, due dates, and completion in the school list. -->
-        <section class="assignment-card" aria-labelledby="assignment-title">
-            <h2 id="assignment-title">School assignments</h2>
-            <form id="assignment-form">
-                <label for="assignment-name">Assignment name</label>
-                <input id="assignment-name" name="assignment-name" type="text" maxlength="120" aria-describedby="form-message">
-
-                <label for="assignment-due-date">Due date</label>
-                <input id="assignment-due-date" name="assignment-due-date" type="date" aria-describedby="form-message">
-
-                <button type="submit">Add assignment</button>
-            </form>
-            <p id="assignment-status" class="list-status" aria-live="polite" aria-atomic="true"></p>
-            <ul id="assignment-list" class="assignment-list" aria-label="Your school assignments"></ul>
-        </section>
     </main>
 
     <footer class="site-footer">
-        <p>Your date is saved only in this browser.</p>
+        <p>Your data is saved only in this browser.</p>
     </footer>
 </body>
 </html>
